@@ -9,6 +9,8 @@ let simulationSpeed = 1;
 let showOrbits = true;
 let showNames = true;
 
+let xrSession = null;
+
 // Adicione esta função no início do arquivo
 function initControls() {
     const controls = document.getElementById('controls');
@@ -37,13 +39,36 @@ async function init() {
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     camera.position.set(0, 100, 200);  // Ajuste esses valores conforme necessário
 
-    renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer = new THREE.WebGLRenderer({ 
+        antialias: true,
+        alpha: true 
+    });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.xr.enabled = true; // Habilitar XR
     document.body.appendChild(renderer.domElement);
 
+    // Criar botão VR personalizado
+    const vrButton = document.getElementById('vrButton');
+    vrButton.addEventListener('click', async () => {
+        if (navigator.xr) {
+            try {
+                const session = await navigator.xr.requestSession('immersive-vr', {
+                    optionalFeatures: ['local-floor', 'bounded-floor']
+                });
+                renderer.xr.setSession(session);
+                vrButton.textContent = 'Sair VR';
+            } catch (error) {
+                console.error('Erro ao iniciar sessão VR:', error);
+            }
+        } else {
+            alert('WebXR não está disponível no seu navegador');
+        }
+    });
+
+    // Modificar controles para funcionar em VR
     controls = new THREE.OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true; 
+    controls.enableDamping = true;
     controls.dampingFactor = 0.05;
     controls.screenSpacePanning = false;
     controls.minDistance = 1;
@@ -269,63 +294,70 @@ function createStarfield() {
 }
 
 function animate() {
-    requestAnimationFrame(animate);
-    
-    planets.forEach(planet => {
-        planet.angle += planet.speed * simulationSpeed * 0.1;
+    renderer.setAnimationLoop(() => {
+        if (renderer.xr.isPresenting) {
+            controls.enabled = false;
+        } else {
+            controls.enabled = true;
+            controls.update();
+        }
         
-        // Rotacione o sistema do planeta inteiro
-        planet.system.rotation.y = planet.angle;
-        
-        // Rotação do planeta em torno do próprio eixo
-        planet.mesh.rotation.y += planet.speed * 5 * simulationSpeed * planet.rotationDirection;
+        planets.forEach(planet => {
+            planet.angle += planet.speed * simulationSpeed * 0.1;
+            
+            // Rotacione o sistema do planeta inteiro
+            planet.system.rotation.y = planet.angle;
+            
+            // Rotação do planeta em torno do próprio eixo
+            planet.mesh.rotation.y += planet.speed * 5 * simulationSpeed * planet.rotationDirection;
 
-        // Animação dos anéis de Saturno
-        if (planet.name === "Saturno" && planet.saturnRings) {
-            const dustParticles = planet.saturnRings.children[1];
-            const positions = dustParticles.geometry.attributes.position;
-            const velocities = dustParticles.geometry.attributes.velocity;
+            // Animação dos anéis de Saturno
+            if (planet.name === "Saturno" && planet.saturnRings) {
+                const dustParticles = planet.saturnRings.children[1];
+                const positions = dustParticles.geometry.attributes.position;
+                const velocities = dustParticles.geometry.attributes.velocity;
 
-            for (let i = 0; i < positions.count; i++) {
-                const x = positions.getX(i);
-                const z = positions.getZ(i);
-                const y = positions.getY(i);
-                
-                // Calcular o raio atual da partícula
-                const radius = Math.sqrt(x * x + z * z);
-                
-                // Calcular o novo ângulo baseado na velocidade orbital da partícula
-                const currentAngle = Math.atan2(z, x);
-                const angularVelocity = velocities.getX(i);
-                const newAngle = currentAngle + angularVelocity * simulationSpeed * 0.1;
-                
-                // Atualizar a posição mantendo o mesmo raio
-                positions.setXYZ(i, 
-                    Math.cos(newAngle) * radius,
-                    y,
-                    Math.sin(newAngle) * radius
-                );
+                for (let i = 0; i < positions.count; i++) {
+                    const x = positions.getX(i);
+                    const z = positions.getZ(i);
+                    const y = positions.getY(i);
+                    
+                    // Calcular o raio atual da partícula
+                    const radius = Math.sqrt(x * x + z * z);
+                    
+                    // Calcular o novo ângulo baseado na velocidade orbital da partícula
+                    const currentAngle = Math.atan2(z, x);
+                    const angularVelocity = velocities.getX(i);
+                    const newAngle = currentAngle + angularVelocity * simulationSpeed * 0.1;
+                    
+                    // Atualizar a posição mantendo o mesmo raio
+                    positions.setXYZ(i, 
+                        Math.cos(newAngle) * radius,
+                        y,
+                        Math.sin(newAngle) * radius
+                    );
+                }
+                positions.needsUpdate = true;
             }
-            positions.needsUpdate = true;
-        }
 
-        // Efeito de brilho pulsante para o Sol
-        if (planet.name === "Sol") {
-            const pulseFactor = Math.sin(Date.now() * 0.001) * 0.1 + 1;
-            planet.mesh.scale.set(pulseFactor, pulseFactor, pulseFactor);
-        }
+            // Efeito de brilho pulsante para o Sol
+            if (planet.name === "Sol") {
+                const pulseFactor = Math.sin(Date.now() * 0.001) * 0.1 + 1;
+                planet.mesh.scale.set(pulseFactor, pulseFactor, pulseFactor);
+            }
+        });
+
+        // Rotação lenta do campo estelar
+        scene.children.forEach(child => {
+            if (child instanceof THREE.Points) {
+                child.rotation.y += 0.0001 * simulationSpeed * 0.1;
+            }
+        });
+
+        updateInfoPanel();
+        controls.update();
+        renderer.render(scene, camera);
     });
-
-    // Rotação lenta do campo estelar
-    scene.children.forEach(child => {
-        if (child instanceof THREE.Points) {
-            child.rotation.y += 0.0001 * simulationSpeed * 0.1;
-        }
-    });
-
-    updateInfoPanel();
-    controls.update();
-    renderer.render(scene, camera);
 }
 
 function loadTexture(url) {
@@ -514,6 +546,98 @@ function setupControlToggle() {
 // Chame esta função no seu init() ou em algum ponto apropriado na inicialização
 setupControlToggle();
 
-init().catch(error => {
+// Adicionar controles VR para interação
+function setupVRControls() {
+    renderer.xr.addEventListener('sessionstart', () => {
+        xrSession = renderer.xr.getSession();
+        console.log('Sessão VR iniciada');
+    });
+
+    renderer.xr.addEventListener('sessionend', () => {
+        xrSession = null;
+        console.log('Sessão VR encerrada');
+    });
+}
+
+// Modificar a função de clique para funcionar em VR
+function onSelectStart(event) {
+    if (renderer.xr.isPresenting) {
+        const controller = event.target;
+        const tempMatrix = new THREE.Matrix4();
+        tempMatrix.identity().extractRotation(controller.matrixWorld);
+
+        const raycaster = new THREE.Raycaster();
+        raycaster.ray.origin.setFromMatrixPosition(controller.matrixWorld);
+        raycaster.ray.direction.set(0, 0, -1).applyMatrix4(tempMatrix);
+
+        const intersects = raycaster.intersectObjects(scene.children, true);
+        if (intersects.length > 0) {
+            const clickedObject = intersects[0].object;
+            const planet = planets.find(p => p.mesh === clickedObject || p.mesh.children.includes(clickedObject));
+            if (planet) {
+                showPlanetInfo(planet);
+            }
+        }
+    }
+}
+
+// Adicionar controladores VR
+function addVRControllers() {
+    const controller1 = renderer.xr.getController(0);
+    controller1.addEventListener('selectstart', onSelectStart);
+    scene.add(controller1);
+
+    const controller2 = renderer.xr.getController(1);
+    controller2.addEventListener('selectstart', onSelectStart);
+    scene.add(controller2);
+
+    // Adicionar modelos visuais para os controladores
+    const controllerModelFactory = new THREE.XRControllerModelFactory();
+
+    const controllerGrip1 = renderer.xr.getControllerGrip(0);
+    controllerGrip1.add(controllerModelFactory.createControllerModel(controllerGrip1));
+    scene.add(controllerGrip1);
+
+    const controllerGrip2 = renderer.xr.getControllerGrip(1);
+    controllerGrip2.add(controllerModelFactory.createControllerModel(controllerGrip2));
+    scene.add(controllerGrip2);
+}
+
+// Modificar a inicialização
+async function initVR() {
+    await init();
+    setupVRControls();
+    addVRControllers();
+    updateVRButton();
+}
+
+// Iniciar com suporte a VR
+initVR().catch(error => {
     console.error("Erro na inicialização:", error);
 });
+
+function updateVRButton() {
+    const vrButton = document.getElementById('vrButton');
+    
+    if (navigator.xr) {
+        navigator.xr.isSessionSupported('immersive-vr')
+            .then(supported => {
+                if (supported) {
+                    vrButton.classList.add('available');
+                    vrButton.classList.remove('not-available');
+                    vrButton.textContent = 'Entrar VR';
+                    vrButton.title = 'Entrar no modo VR';
+                } else {
+                    vrButton.classList.add('not-available');
+                    vrButton.classList.remove('available');
+                    vrButton.textContent = 'VR não disponível';
+                    vrButton.title = 'VR não disponível no seu dispositivo';
+                }
+            });
+    } else {
+        vrButton.classList.add('not-available');
+        vrButton.classList.remove('available');
+        vrButton.textContent = 'VR não suportado';
+        vrButton.title = 'VR não suportado no seu navegador';
+    }
+}
