@@ -12,7 +12,7 @@
 
 <body>
 
-    <a-scene vr-mode-ui="enabled: true" embedded>
+    <a-scene>
 
         <a-assets>
             <audio id="background-music" src="audio/pad-space-travel-hyperdrive-engine-humming-235901.mp3"></audio>
@@ -151,13 +151,11 @@
         <a-entity id="info" position="0 3 -2" text="value: ; color: white; width: 25;"></a-entity>
 
         <!-- Camera and cursor -->
-        <a-entity id="cameraRig" position="0 3 30">
-            <a-camera wasd-controls-enabled="false" look-controls="pointerLockEnabled: true; touchEnabled: true" 
-                      vr-mode-ui="enabled: true" 
-                      fov="80">
-                <a-cursor material="color: yellow; shader: flat;"></a-cursor>
-            </a-camera>
-        </a-entity>
+        <a-camera position="0 3 50" wasd-controls-enabled="true" look-controls="true" zoom="1">
+            <a-cursor fuse="true" fuse-timeout="100" raycaster="objects: .planet, .nav-arrow"
+                material="color: yellow; shader: flat;">
+            </a-cursor>
+        </a-camera>
     </a-scene>
 
     <script>
@@ -230,7 +228,7 @@
         // Função para mover a câmera suavemente
         function moveCamera(direction) {
             const position = camera.getAttribute('position');
-            const moveDistance = 1.5; // Aumenta a distância de movimento
+            const moveDistance = 0.5; // Reduced distance for finer control
             const duration = 500; // Duração da animação em milissegundos
 
             let newPosition = { ...position };
@@ -275,14 +273,7 @@
 
     </script>
 
-    <script>
-        window.addEventListener('error', function(event) {
-            if (event.message.includes('[webext-bridge] No handler registered')) {
-                console.warn('Ignoring webext-bridge error:', event.message);
-                event.preventDefault();
-            }
-        });
-    </script>
+
 
 </body>
 
