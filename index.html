@@ -12,7 +12,7 @@
 
 <body>
 
-    <a-scene>
+    <a-scene vr-mode-ui="enabled: true" embedded>
 
         <a-assets>
             <audio id="background-music" src="audio/pad-space-travel-hyperdrive-engine-humming-235901.mp3"></audio>
@@ -33,7 +33,7 @@
             <img id="saturnText" src="img/saturn.jpg">
             <img id="uranusText" src="img/uranus.jpg">
             <img id="neptuneText" src="img/neptune.jpg">
-            <img id="saturnRingText" src="img/saturn_ring.png">
+            <img id="saturnRingText" src="img/saturn_ring_alpha.png">
             <img id="skyText" src="img/stars.jpg">
         </a-assets>
 
@@ -151,11 +151,13 @@
         <a-entity id="info" position="0 3 -2" text="value: ; color: white; width: 25;"></a-entity>
 
         <!-- Camera and cursor -->
-        <a-camera position="0 3 50">
-            <a-cursor fuse="true" fuse-timeout="100" raycaster="objects: .planet, .nav-arrow"
-                material="color: yellow; shader: flat;">
-            </a-cursor>
-        </a-camera>
+        <a-entity id="cameraRig" position="0 3 30">
+            <a-camera wasd-controls-enabled="false" look-controls="pointerLockEnabled: true; touchEnabled: true" 
+                      vr-mode-ui="enabled: true" 
+                      fov="80">
+                <a-cursor material="color: yellow; shader: flat;"></a-cursor>
+            </a-camera>
+        </a-entity>
     </a-scene>
 
     <script>
@@ -273,7 +275,14 @@
 
     </script>
 
-
+    <script>
+        window.addEventListener('error', function(event) {
+            if (event.message.includes('[webext-bridge] No handler registered')) {
+                console.warn('Ignoring webext-bridge error:', event.message);
+                event.preventDefault();
+            }
+        });
+    </script>
 
 </body>
 
