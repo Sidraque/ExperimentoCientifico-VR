@@ -7,23 +7,12 @@
     <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
-
 </head>
 
 <body>
-
     <a-scene>
-
         <a-assets>
             <audio id="background-music" src="audio/pad-space-travel-hyperdrive-engine-humming-235901.mp3"></audio>
-        </a-assets>
-
-        <!-- Som de fundo tocando automaticamente -->
-        <a-sound id="sound" src="audio/pad-space-travel-hyperdrive-engine-humming-235901.mp3" position="0 0 0" autoplay="true" loop="true" volume="1"></a-sound>
-
-
-        <!-- Assets -->
-        <a-assets>
             <img id="sunText" src="img/sun.jpg">
             <img id="earthText" src="img/earth.jpg">
             <img id="marsText" src="img/mars.jpg">
@@ -37,25 +26,18 @@
             <img id="skyText" src="img/stars.jpg">
         </a-assets>
 
+        <!-- Som de fundo tocando automaticamente -->
+        <a-sound id="sound" src="audio/pad-space-travel-hyperdrive-engine-humming-235901.mp3" position="0 0 0" autoplay="true" loop="true" volume="1"></a-sound>
 
         <a-entity id="vr-modal" position="0 0 -3" visible="false">
-            <!-- Fundo do modal -->
             <a-plane width="8" height="4" color="#000" material="opacity: 0.9" position="0 0 0"></a-plane>
-
-            <!-- Título grande -->
-            <a-text id="vr-modal-title" value="" position="0 1.2 0" align="center" width="7" color="#FFD700">
-            </a-text>
-
-            <!-- Conteúdo grande -->
-            <a-text id="vr-modal-content" value="" position="0 -0.3 0" align="center" width="6.5" color="#FFF">
-            </a-text>
+            <a-text id="vr-modal-title" value="" position="0 1.2 0" align="center" width="7" color="#FFD700"></a-text>
+            <a-text id="vr-modal-content" value="" position="0 -0.3 0" align="center" width="6.5" color="#FFF"></a-text>
         </a-entity>
 
-
-
-        <!-- Background -->
         <a-sky src="#skyText"></a-sky>
         <a-light type="ambient" color="#555"></a-light>
+
 
         <!-- Sun -->
         <a-entity id="sun" geometry="primitive: sphere; radius:12;" position="0 1.25 -15"
@@ -147,11 +129,11 @@
             <a-image src="img/arrow-backward.png" position="-1 0 0" rotation="0 0 0" scale="0.7 0.7 0.7" class="nav-arrow" data-direction="backward"></a-image>
         </a-entity>
 
-        <!-- Text for planet info -->
+         <!-- Text para informações dos planetas -->
         <a-entity id="info" position="0 3 -2" text="value: ; color: white; width: 25;"></a-entity>
 
-        <!-- Camera and cursor -->
-        <a-camera position="0 1.6 15" wasd-controls-enabled="true" look-controls="true" zoom="1" fov="80">
+        <!-- Câmera e cursor -->
+        <a-camera id="camera" position="0 1.6 15" wasd-controls-enabled="true" look-controls="true">
             <a-cursor fuse="true" fuse-timeout="1000" raycaster="objects: .planet, .nav-arrow"
                 material="color: yellow; shader: flat;">
             </a-cursor>
@@ -159,122 +141,142 @@
     </a-scene>
 
     <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const scene = document.querySelector('a-scene');
+            const camera = document.getElementById('camera');
+            const planets = document.querySelectorAll('.planet');
+            const vrModal = document.getElementById('vr-modal');
+            const vrModalTitle = document.getElementById('vr-modal-title');
+            const vrModalContent = document.getElementById('vr-modal-content');
 
-        const planets = document.querySelectorAll('.planet');
-        const vrModal = document.getElementById('vr-modal');
-        const vrModalTitle = document.getElementById('vr-modal-title');
-        const vrModalContent = document.getElementById('vr-modal-content');
+            // Posição do Sol no espaço
+            const sunPosition = new THREE.Vector3(0, 1.25, -15);
 
-        // Posição do Sol no espaço (com base no código, o Sol está em (0, 1.25, -15))
-        const sunPosition = new THREE.Vector3(0, 1.25, -15);
+            // Função para calcular a distância entre o planeta e o Sol
+            function isPlanetInFrontOfSun(planet) {
+                const planetPosition = new THREE.Vector3();
+                planet.object3D.getWorldPosition(planetPosition);
+                return planetPosition.z > sunPosition.z;
+            }
 
-        // Função para calcular a distância entre o planeta e o Sol
-        function isPlanetInFrontOfSun(planet) {
-            const planetPosition = new THREE.Vector3();
-            planet.object3D.getWorldPosition(planetPosition);
+            // Função para abrir o modal VR
+            function openVRModal(title, content, planet) {
+                if (isPlanetInFrontOfSun(planet)) {
+                    const position = planet.object3D.getWorldPosition(new THREE.Vector3());
 
-            // Verifica se o planeta está em uma linha direta com o Sol (na frente do Sol no eixo Z)
-            // Vamos considerar que um planeta está "em frente" do Sol se o seu valor de 'z' for maior que o do Sol
-            return planetPosition.z > sunPosition.z;
-        }
+                    vrModalTitle.setAttribute('value', title);
+                    vrModalContent.setAttribute('value', content);
 
-        // Função para abrir o modal VR
-        function openVRModal(title, content, planet) {
-            if (isPlanetInFrontOfSun(planet)) { // Verifica se o planeta está em frente ao Sol
-                const position = planet.object3D.getWorldPosition(new THREE.Vector3()); // Obtém a posição mundial do planeta
+                    const modalPosition = {
+                        x: position.x + 1,
+                        y: position.y + 1.5,
+                        z: position.z
+                    };
 
-                // Atualiza os textos do modal
-                vrModalTitle.setAttribute('value', title);
-                vrModalContent.setAttribute('value', content);
+                    vrModal.setAttribute('position', `${modalPosition.x} ${modalPosition.y} ${modalPosition.z}`);
+                    vrModal.setAttribute('visible', true);
 
-                // Ajusta o modal para estar próximo do planeta
-                const modalPosition = {
-                    x: position.x + 1, // Deslocado para o lado (alterar para + ou - para ajustar)
-                    y: position.y + 1.5, // Deslocado para cima
-                    z: position.z // Mantém a mesma profundidade
-                };
+                    vrModal.setAttribute('animation', {
+                        property: 'position',
+                        to: `${modalPosition.x} ${modalPosition.y} ${modalPosition.z}`,
+                        easing: 'easeInOutCubic',
+                        dur: 500
+                    });
+                }
+            }
 
-                // Define a posição e torna o modal visível
-                vrModal.setAttribute('position', `${modalPosition.x} ${modalPosition.y} ${modalPosition.z}`);
-                vrModal.setAttribute('visible', true);
+            // Fechar o modal VR
+            function closeVRModal() {
+                vrModal.setAttribute('visible', false);
+            }
 
-                // Adiciona animação ao modal
-                vrModal.setAttribute('animation', {
+            // Evento para cada planeta
+            planets.forEach(planet => {
+                planet.addEventListener('click', () => {
+                    const info = planet.getAttribute('data-info');
+                    const [title, ...details] = info.split('\n');
+                    openVRModal(title, details.join('\n'), planet);
+                });
+            });
+
+            const navArrows = document.querySelectorAll('.nav-arrow');
+
+            // Função para mover a câmera suavemente
+            function moveCamera(direction) {
+                const position = camera.getAttribute('position');
+                const moveDistance = 0.5; // Distância reduzida para controle mais fino
+                const duration = 500; // Duração da animação em milissegundos
+
+                let newPosition = { ...position };
+
+                switch (direction) {
+                    case 'up':
+                        newPosition.y += moveDistance;
+                        break;
+                    case 'down':
+                        newPosition.y -= moveDistance;
+                        break;
+                    case 'left':
+                        newPosition.x -= moveDistance;
+                        break;
+                    case 'right':
+                        newPosition.x += moveDistance;
+                        break;
+                    case 'forward':
+                        newPosition.z -= moveDistance;
+                        break;
+                    case 'backward':
+                        newPosition.z += moveDistance;
+                        break;
+                }
+
+                camera.setAttribute('animation', {
                     property: 'position',
-                    to: `${modalPosition.x} ${modalPosition.y} ${modalPosition.z}`,
-                    easing: 'easeInOutCubic',
-                    dur: 500
+                    to: `${newPosition.x} ${newPosition.y} ${newPosition.z}`,
+                    easing: 'easeInOutQuad',
+                    dur: duration
                 });
             }
-        }
 
-        // Fechar o modal VR
-        function closeVRModal() {
-            vrModal.setAttribute('visible', false);
-        }
-
-        // Evento para cada planeta
-        planets.forEach(planet => {
-            planet.addEventListener('click', () => {
-                const info = planet.getAttribute('data-info');
-                const [title, ...details] = info.split('\n');
-                openVRModal(title, details.join('\n'), planet);
+            // Evento para cada seta de navegação
+            navArrows.forEach(arrow => {
+                arrow.addEventListener('click', () => {
+                    const direction = arrow.getAttribute('data-direction');
+                    moveCamera(direction);
+                });
             });
-        });
 
-        const navArrows = document.querySelectorAll('.nav-arrow');
-        const camera = document.querySelector('a-camera');
-
-        // Função para mover a câmera suavemente
-        function moveCamera(direction) {
-            const position = camera.getAttribute('position');
-            const moveDistance = 0.5; // Reduced distance for finer control
-            const duration = 500; // Duração da animação em milissegundos
-
-            let newPosition = { ...position };
-
-            switch (direction) {
-                case 'up':
-                    newPosition.y += moveDistance;
-                    break;
-                case 'down':
-                    newPosition.y -= moveDistance;
-                    break;
-                case 'left':
-                    newPosition.x -= moveDistance;
-                    break;
-                case 'right':
-                    newPosition.x += moveDistance;
-                    break;
-                case 'forward':
-                    newPosition.z -= moveDistance;
-                    break;
-                case 'backward':
-                    newPosition.z += moveDistance;
-                    break;
+            // Função para ajustar o zoom
+            function adjustZoomForVR(isVR) {
+                if (isVR) {
+                    camera.setAttribute('zoom', 0.5); // Ajuste este valor conforme necessário
+                } else {
+                    camera.setAttribute('zoom', 1); // Valor padrão
+                }
             }
 
-            // Animação suave para a nova posição
-            camera.setAttribute('animation', {
-                property: 'position',
-                to: `${newPosition.x} ${newPosition.y} ${newPosition.z}`,
-                easing: 'easeInOutQuad',
-                dur: duration
-            });
-        }
+            // Função para ajustar a posição da câmera
+            function adjustCameraPositionForVR(isVR) {
+                if (isVR) {
+                    camera.setAttribute('position', {x: 0, y: 1.6, z: 20}); // Distância maior para VR
+                } else {
+                    camera.setAttribute('position', {x: 0, y: 1.6, z: 15});
+                }
+            }
 
-        // Evento para cada seta de navegação
-        navArrows.forEach(arrow => {
-            arrow.addEventListener('click', () => {
-                const direction = arrow.getAttribute('data-direction');
-                moveCamera(direction);
+            // Evento quando entrar no modo VR
+            scene.addEventListener('enter-vr', () => {
+                adjustZoomForVR(true);
+                adjustCameraPositionForVR(true);
+            });
+
+            // Evento quando sair do modo VR
+            scene.addEventListener('exit-vr', () => {
+                adjustZoomForVR(false);
+                adjustCameraPositionForVR(false);
             });
         });
-
     </script>
-
-
-
 </body>
 
 </html>
