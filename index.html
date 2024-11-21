@@ -166,6 +166,26 @@
                 }
             }
     
+            // Ajustar zoom para VR
+            function adjustZoomForVR(isVR) {
+                if (isVR) {
+                    camera.setAttribute('zoom', isMobile() ? 0.6 : 0.5); // Ajuste do zoom no modo VR para mobile ou desktop
+                } else {
+                    camera.setAttribute('zoom', isMobile() ? 0.8 : 1); // Zoom padrão
+                }
+            }
+    
+            // Ajustar posição da câmera para VR
+            function adjustCameraPositionForVR(isVR) {
+                if (isVR) {
+                    // Aumentar a distância no eixo Z para mobile
+                    camera.setAttribute('position', isMobile() ? { x: 0, y: 1.6, z: 45 } : { x: 0, y: 1.6, z: 20 }); 
+                } else {
+                    // Configuração padrão fora do modo VR
+                    camera.setAttribute('position', isMobile() ? { x: 0, y: 1.6, z: 25 } : { x: 0, y: 1.6, z: 15 });
+                }
+            }
+    
             // Posição do Sol no espaço
             const sunPosition = new THREE.Vector3(0, 1.25, -15);
     
@@ -261,24 +281,6 @@
                 });
             });
     
-            // Ajustar zoom para VR
-            function adjustZoomForVR(isVR) {
-                if (isVR) {
-                    camera.setAttribute('zoom', isMobile() ? 0.6 : 0.5); // Ajuste do zoom no modo VR para mobile ou desktop
-                } else {
-                    camera.setAttribute('zoom', isMobile() ? 0.8 : 1); // Zoom padrão
-                }
-            }
-    
-            // Ajustar posição da câmera para VR
-            function adjustCameraPositionForVR(isVR) {
-                if (isVR) {
-                    camera.setAttribute('position', isMobile() ? { x: 0, y: 1.6, z: 30 } : { x: 0, y: 1.6, z: 20 }); // Configuração para VR
-                } else {
-                    camera.setAttribute('position', isMobile() ? { x: 0, y: 1.6, z: 25 } : { x: 0, y: 1.6, z: 15 }); // Configuração padrão
-                }
-            }
-    
             // Eventos para modo VR
             scene.addEventListener('enter-vr', () => {
                 adjustZoomForVR(true);
@@ -293,7 +295,8 @@
             // Inicializar configurações da câmera
             setInitialCameraSettings();
         });
-    </script>    
+    </script>
+    
 </body>
 
 </html>
