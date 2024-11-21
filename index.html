@@ -40,7 +40,7 @@
 
 
         <!-- Sun -->
-        <a-entity id="sun" geometry="primitive: sphere; radius:12;" position="0 1.25 -15"
+        <a-entity id="sun" geometry="primitive: sphere; radius:8;" position="0 1.25 -15"
             material="shader: flat; src: #sunText"
             animation="property: rotation; to: 0 -360 0; easing: linear; loop: true; dur: 200000">
         </a-entity>
@@ -148,34 +148,51 @@
             const vrModal = document.getElementById('vr-modal');
             const vrModalTitle = document.getElementById('vr-modal-title');
             const vrModalContent = document.getElementById('vr-modal-content');
-
+            const navArrows = document.querySelectorAll('.nav-arrow');
+    
+            // Função para detectar dispositivos móveis
+            function isMobile() {
+                return /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            }
+    
+            // Configuração inicial baseada no dispositivo
+            function setInitialCameraSettings() {
+                if (isMobile()) {
+                    camera.setAttribute('position', { x: 0, y: 1.6, z: 25 }); // Configuração para dispositivos móveis
+                    camera.setAttribute('zoom', 0.8); // Ajuste do zoom para mobile
+                } else {
+                    camera.setAttribute('position', { x: 0, y: 1.6, z: 15 }); // Configuração para desktops
+                    camera.setAttribute('zoom', 1); // Zoom padrão
+                }
+            }
+    
             // Posição do Sol no espaço
             const sunPosition = new THREE.Vector3(0, 1.25, -15);
-
-            // Função para calcular a distância entre o planeta e o Sol
+    
+            // Função para verificar se o planeta está à frente do Sol
             function isPlanetInFrontOfSun(planet) {
                 const planetPosition = new THREE.Vector3();
                 planet.object3D.getWorldPosition(planetPosition);
                 return planetPosition.z > sunPosition.z;
             }
-
-            // Função para abrir o modal VR
+    
+            // Abrir modal VR
             function openVRModal(title, content, planet) {
                 if (isPlanetInFrontOfSun(planet)) {
                     const position = planet.object3D.getWorldPosition(new THREE.Vector3());
-
+    
                     vrModalTitle.setAttribute('value', title);
                     vrModalContent.setAttribute('value', content);
-
+    
                     const modalPosition = {
                         x: position.x + 1,
                         y: position.y + 1.5,
                         z: position.z
                     };
-
+    
                     vrModal.setAttribute('position', `${modalPosition.x} ${modalPosition.y} ${modalPosition.z}`);
                     vrModal.setAttribute('visible', true);
-
+    
                     vrModal.setAttribute('animation', {
                         property: 'position',
                         to: `${modalPosition.x} ${modalPosition.y} ${modalPosition.z}`,
@@ -184,13 +201,13 @@
                     });
                 }
             }
-
-            // Fechar o modal VR
+    
+            // Fechar modal VR
             function closeVRModal() {
                 vrModal.setAttribute('visible', false);
             }
-
-            // Evento para cada planeta
+    
+            // Evento para exibir informações de cada planeta
             planets.forEach(planet => {
                 planet.addEventListener('click', () => {
                     const info = planet.getAttribute('data-info');
@@ -198,17 +215,15 @@
                     openVRModal(title, details.join('\n'), planet);
                 });
             });
-
-            const navArrows = document.querySelectorAll('.nav-arrow');
-
+    
             // Função para mover a câmera suavemente
             function moveCamera(direction) {
                 const position = camera.getAttribute('position');
-                const moveDistance = 0.5; // Distância reduzida para controle mais fino
-                const duration = 500; // Duração da animação em milissegundos
-
+                const moveDistance = 0.5; // Distância para o movimento
+                const duration = 500; // Duração da animação
+    
                 let newPosition = { ...position };
-
+    
                 switch (direction) {
                     case 'up':
                         newPosition.y += moveDistance;
@@ -229,7 +244,7 @@
                         newPosition.z += moveDistance;
                         break;
                 }
-
+    
                 camera.setAttribute('animation', {
                     property: 'position',
                     to: `${newPosition.x} ${newPosition.y} ${newPosition.z}`,
@@ -237,46 +252,48 @@
                     dur: duration
                 });
             }
-
-            // Evento para cada seta de navegação
+    
+            // Eventos de navegação
             navArrows.forEach(arrow => {
                 arrow.addEventListener('click', () => {
                     const direction = arrow.getAttribute('data-direction');
                     moveCamera(direction);
                 });
             });
-
-            // Função para ajustar o zoom
+    
+            // Ajustar zoom para VR
             function adjustZoomForVR(isVR) {
                 if (isVR) {
-                    camera.setAttribute('zoom', 0.5); // Ajuste este valor conforme necessário
+                    camera.setAttribute('zoom', isMobile() ? 0.6 : 0.5); // Ajuste do zoom no modo VR para mobile ou desktop
                 } else {
-                    camera.setAttribute('zoom', 1); // Valor padrão
+                    camera.setAttribute('zoom', isMobile() ? 0.8 : 1); // Zoom padrão
                 }
             }
-
-            // Função para ajustar a posição da câmera
+    
+            // Ajustar posição da câmera para VR
             function adjustCameraPositionForVR(isVR) {
                 if (isVR) {
-                    camera.setAttribute('position', {x: 0, y: 1.6, z: 20}); // Distância maior para VR
+                    camera.setAttribute('position', isMobile() ? { x: 0, y: 1.6, z: 30 } : { x: 0, y: 1.6, z: 20 }); // Configuração para VR
                 } else {
-                    camera.setAttribute('position', {x: 0, y: 1.6, z: 15});
+                    camera.setAttribute('position', isMobile() ? { x: 0, y: 1.6, z: 25 } : { x: 0, y: 1.6, z: 15 }); // Configuração padrão
                 }
             }
-
-            // Evento quando entrar no modo VR
+    
+            // Eventos para modo VR
             scene.addEventListener('enter-vr', () => {
                 adjustZoomForVR(true);
                 adjustCameraPositionForVR(true);
             });
-
-            // Evento quando sair do modo VR
+    
             scene.addEventListener('exit-vr', () => {
                 adjustZoomForVR(false);
                 adjustCameraPositionForVR(false);
             });
+    
+            // Inicializar configurações da câmera
+            setInitialCameraSettings();
         });
-    </script>
+    </script>    
 </body>
 
 </html>
