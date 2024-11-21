@@ -137,12 +137,22 @@
             </a-entity>
         </a-entity>
 
+        <!-- Navigation Arrows -->
+        <a-entity id="navigation-arrows" position="0 1.5 1">
+            <a-image src="img/arrow-up.png" position="0 0.5 0" rotation="0 0 0" scale="0.7 0.7 0.7" class="nav-arrow" data-direction="up"></a-image>
+            <a-image src="img/arrow-down.png" position="0 -0.5 0" rotation="0 0 0" scale="0.7 0.7 0.7" class="nav-arrow" data-direction="down"></a-image>
+            <a-image src="img/arrow-left.png" position="-0.5 0 0" rotation="0 0 0" scale="0.7 0.7 0.7" class="nav-arrow" data-direction="left"></a-image>
+            <a-image src="img/arrow-right.png" position="0.5 0 0" rotation="0 0 0" scale="0.7 0.7 0.7" class="nav-arrow" data-direction="right"></a-image>
+            <a-image src="img/arrow-forward.png" position="1 0 0" rotation="0 0 0" scale="0.7 0.7 0.7" class="nav-arrow" data-direction="forward"></a-image>
+            <a-image src="img/arrow-backward.png" position="-1 0 0" rotation="0 0 0" scale="0.7 0.7 0.7" class="nav-arrow" data-direction="backward"></a-image>
+        </a-entity>
+
         <!-- Text for planet info -->
         <a-entity id="info" position="0 3 -2" text="value: ; color: white; width: 25;"></a-entity>
 
         <!-- Camera and cursor -->
         <a-camera position="0 2 15">
-            <a-cursor fuse="true" fuse-timeout="100" raycaster="objects: .planet"
+            <a-cursor fuse="true" fuse-timeout="100" raycaster="objects: .planet, .nav-arrow"
                 material="color: yellow; shader: flat;">
             </a-cursor>
         </a-camera>
@@ -211,6 +221,56 @@
                 openVRModal(title, details.join('\n'), planet);
             });
         });
+
+        const navArrows = document.querySelectorAll('.nav-arrow');
+        const camera = document.querySelector('a-camera');
+
+        // Função para mover a câmera suavemente
+        function moveCamera(direction) {
+            const position = camera.getAttribute('position');
+            const moveDistance = 1.5; // Aumenta a distância de movimento
+            const duration = 500; // Duração da animação em milissegundos
+
+            let newPosition = { ...position };
+
+            switch (direction) {
+                case 'up':
+                    newPosition.y += moveDistance;
+                    break;
+                case 'down':
+                    newPosition.y -= moveDistance;
+                    break;
+                case 'left':
+                    newPosition.x -= moveDistance;
+                    break;
+                case 'right':
+                    newPosition.x += moveDistance;
+                    break;
+                case 'forward':
+                    newPosition.z -= moveDistance;
+                    break;
+                case 'backward':
+                    newPosition.z += moveDistance;
+                    break;
+            }
+
+            // Animação suave para a nova posição
+            camera.setAttribute('animation', {
+                property: 'position',
+                to: `${newPosition.x} ${newPosition.y} ${newPosition.z}`,
+                easing: 'easeInOutQuad',
+                dur: duration
+            });
+        }
+
+        // Evento para cada seta de navegação
+        navArrows.forEach(arrow => {
+            arrow.addEventListener('click', () => {
+                const direction = arrow.getAttribute('data-direction');
+                moveCamera(direction);
+            });
+        });
+
     </script>
 
 
