@@ -1,0 +1,6 @@
+/* Corpo sem margens e com overflow escondido */
+body {
+    margin: 0;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+}

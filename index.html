@@ -5,18 +5,23 @@
     <meta charset="UTF-8">
     <title>System Solar - VR</title>
     <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-
+    <link rel="stylesheet" href="style.css">
     <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
-    <style>
-        body {
-            margin: 0;
-            overflow: hidden;
-        }
-    </style>
+
 </head>
 
 <body>
+
     <a-scene>
+
+        <a-assets>
+            <audio id="background-music" src="audio/pad-space-travel-hyperdrive-engine-humming-235901.mp3"></audio>
+        </a-assets>
+
+        <!-- Som de fundo tocando automaticamente -->
+        <a-sound id="sound" src="audio/pad-space-travel-hyperdrive-engine-humming-235901.mp3" position="0 0 0" autoplay="true" loop="true" volume="1"></a-sound>
+
+
         <!-- Assets -->
         <a-assets>
             <img id="sunText" src="img/sun.jpg">
@@ -32,95 +37,103 @@
             <img id="skyText" src="img/stars.jpg">
         </a-assets>
 
+
+        <a-entity id="vr-modal" position="0 0 -3" visible="false">
+            <!-- Fundo do modal -->
+            <a-plane width="8" height="4" color="#000" material="opacity: 0.9" position="0 0 0"></a-plane>
+
+            <!-- Título grande -->
+            <a-text id="vr-modal-title" value="" position="0 1.2 0" align="center" width="7" color="#FFD700">
+            </a-text>
+
+            <!-- Conteúdo grande -->
+            <a-text id="vr-modal-content" value="" position="0 -0.3 0" align="center" width="6.5" color="#FFF">
+            </a-text>
+        </a-entity>
+
+
+
         <!-- Background -->
         <a-sky src="#skyText"></a-sky>
         <a-light type="ambient" color="#555"></a-light>
 
         <!-- Sun -->
         <a-entity id="sun" geometry="primitive: sphere; radius:12;" position="0 1.25 -15"
-                  material="shader: flat; src: #sunText" 
-                  animation="property: rotation; to: 0 -360 0; easing: linear; loop: true; dur: 200000">
+            material="shader: flat; src: #sunText"
+            animation="property: rotation; to: 0 -360 0; easing: linear; loop: true; dur: 200000">
         </a-entity>
 
         <!-- Mercury -->
         <a-entity position="0 1.25 -5" rotation="0 20 0"
-                  animation="property: rotation; to: 0 360 0; easing: linear; loop: true; dur: 18000">
+            animation="property: rotation; to: 0 360 0; easing: linear; loop: true; dur: 18000">
             <a-entity id="mercury" geometry="primitive: sphere; radius:.2;" position="8 0 0"
-                      material="src: #mercuryText"
-                      class="planet"
-                      data-info="Mercúrio:\nO menor planeta.\nDistância do Sol: 57.9M km\nPeríodo Orbital: 88 dias">
+                material="src: #mercuryText" class="planet"
+                data-info="Mercúrio:\nO menor planeta.\nDistância do Sol: 57.9M km\nPeríodo Orbital: 88 dias">
             </a-entity>
         </a-entity>
 
         <!-- Venus -->
         <a-entity position="0 1.25 -5" rotation="0 -60 0"
-                  animation="property: rotation; to: 0 360 0; easing: linear; loop: true; dur: 24000">
-            <a-entity id="venus" geometry="primitive: sphere; radius:.4;" position="10 0 0"
-                      material="src: #venusText"
-                      class="planet"
-                      data-info="Vênus:\nO planeta mais quente.\nDistância do Sol: 108.2M km\nPeríodo Orbital: 225 dias">
+            animation="property: rotation; to: 0 360 0; easing: linear; loop: true; dur: 24000">
+            <a-entity id="venus" geometry="primitive: sphere; radius:.4;" position="10 0 0" material="src: #venusText"
+                class="planet"
+                data-info="Vênus:\nO planeta mais quente.\nDistância do Sol: 108.2M km\nPeríodo Orbital: 225 dias">
             </a-entity>
         </a-entity>
 
         <!-- Earth -->
         <a-entity position="0 1.25 -5" rotation="0 -60 0"
-                  animation="property: rotation; to: 0 300 0; easing: linear; loop: true; dur: 24000">
+            animation="property: rotation; to: 0 300 0; easing: linear; loop: true; dur: 24000">
             <a-entity id="earth" geometry="primitive: sphere; radius:.6;" position="12 0 0"
-                      material="src: #earthText; roughness: 0.8; metalness: 0.2"
-                      class="planet"
-                      data-info="Terra:\nO Planeta Azul.\nDistância do Sol: 150M km\nPeríodo Orbital: 365 dias">
+                material="src: #earthText; roughness: 0.8; metalness: 0.2" class="planet"
+                data-info="Terra:\nO Planeta Azul.\nDistância do Sol: 150M km\nPeríodo Orbital: 365 dias">
             </a-entity>
         </a-entity>
 
         <!-- Mars -->
         <a-entity position="0 1.25 -5" rotation="0 -20 0"
-                  animation="property: rotation; to: 0 340 0; easing: linear; loop: true; dur: 27000">
-            <a-entity id="mars" geometry="primitive: sphere; radius:.3;" position="14 0 0"
-                      material="src: #marsText"
-                      class="planet"
-                      data-info="Marte:\nO Planeta Vermelho.\nDistância do Sol: 228M km\nPeríodo Orbital: 687 dias">
+            animation="property: rotation; to: 0 340 0; easing: linear; loop: true; dur: 27000">
+            <a-entity id="mars" geometry="primitive: sphere; radius:.3;" position="14 0 0" material="src: #marsText"
+                class="planet"
+                data-info="Marte:\nO Planeta Vermelho.\nDistância do Sol: 228M km\nPeríodo Orbital: 687 dias">
             </a-entity>
         </a-entity>
 
         <!-- Jupiter -->
         <a-entity position="0 1.25 -5" rotation="0 0 0"
-                  animation="property: rotation; to: 0 360 0; easing: linear; loop: true; dur: 32000">
+            animation="property: rotation; to: 0 360 0; easing: linear; loop: true; dur: 32000">
             <a-entity id="jupiter" geometry="primitive: sphere; radius:2;" position="18 0 0"
-                      material="src: #jupiterText"
-                      class="planet"
-                      data-info="Júpiter:\nO maior planeta.\nDistância do Sol: 778M km\nPeríodo Orbital: 12 anos">
+                material="src: #jupiterText" class="planet"
+                data-info="Júpiter:\nO maior planeta.\nDistância do Sol: 778M km\nPeríodo Orbital: 12 anos">
             </a-entity>
         </a-entity>
 
         <!-- Saturn -->
         <a-entity position="0 1.25 -5" rotation="0 40 0"
-                  animation="property: rotation; to: 0 400 0; easing: linear; loop: true; dur: 35000">
+            animation="property: rotation; to: 0 400 0; easing: linear; loop: true; dur: 35000">
             <a-entity id="saturn" geometry="primitive: sphere; radius:1.4;" position="22 0 0"
-                      material="src: #saturnText"
-                      class="planet"
-                      data-info="Saturno:\nConhecido por seus anéis.\nDistância do Sol: 1.43B km\nPeríodo Orbital: 29 anos">
+                material="src: #saturnText" class="planet"
+                data-info="Saturno:\nConhecido por seus anéis.\nDistância do Sol: 1.43B km\nPeríodo Orbital: 29 anos">
                 <a-ring position="0 0 0" rotation="-90 0 0" radius-inner="1.6" radius-outer="2.4"
-                        material="src: #saturnRingText"></a-ring>
+                    material="src: #saturnRingText"></a-ring>
             </a-entity>
         </a-entity>
 
         <!-- Uranus -->
         <a-entity position="0 1.25 -5" rotation="0 100 0"
-                  animation="property: rotation; to: 0 400 0; easing: linear; loop: true; dur: 45000">
-            <a-entity id="uranus" geometry="primitive: sphere; radius:1;" position="26 0 0"
-                      material="src: #uranusText"
-                      class="planet"
-                      data-info="Urano:\nUm gigante de gelo.\nDistância do Sol: 2.87B km\nPeríodo Orbital: 84 anos">
+            animation="property: rotation; to: 0 400 0; easing: linear; loop: true; dur: 45000">
+            <a-entity id="uranus" geometry="primitive: sphere; radius:1;" position="26 0 0" material="src: #uranusText"
+                class="planet"
+                data-info="Urano:\nUm gigante de gelo.\nDistância do Sol: 2.87B km\nPeríodo Orbital: 84 anos">
             </a-entity>
         </a-entity>
 
         <!-- Neptune -->
         <a-entity position="0 1.25 -5" rotation="0 120 0"
-                  animation="property: rotation; to: 0 360 0; easing: linear; loop: true; dur: 60000">
+            animation="property: rotation; to: 0 360 0; easing: linear; loop: true; dur: 60000">
             <a-entity id="neptune" geometry="primitive: sphere; radius:.8;" position="30 0 0"
-                      material="src: #neptuneText"
-                      class="planet"
-                      data-info="Netuno:\nO planeta mais ventoso.\nDistância do Sol: 4.5B km\nPeríodo Orbital: 165 anos">
+                material="src: #neptuneText" class="planet"
+                data-info="Netuno:\nO planeta mais ventoso.\nDistância do Sol: 4.5B km\nPeríodo Orbital: 165 anos">
             </a-entity>
         </a-entity>
 
@@ -129,34 +142,79 @@
 
         <!-- Camera and cursor -->
         <a-camera position="0 2 15">
-            <a-cursor 
-                fuse="true" 
-                fuse-timeout="100" 
-                raycaster="objects: .planet" 
+            <a-cursor fuse="true" fuse-timeout="100" raycaster="objects: .planet"
                 material="color: yellow; shader: flat;">
             </a-cursor>
         </a-camera>
     </a-scene>
 
     <script>
-        // Script for handling planet info display
+
         const planets = document.querySelectorAll('.planet');
-        const infoText = document.querySelector('#info');
+        const vrModal = document.getElementById('vr-modal');
+        const vrModalTitle = document.getElementById('vr-modal-title');
+        const vrModalContent = document.getElementById('vr-modal-content');
 
+        // Posição do Sol no espaço (com base no código, o Sol está em (0, 1.25, -15))
+        const sunPosition = new THREE.Vector3(0, 1.25, -15);
+
+        // Função para calcular a distância entre o planeta e o Sol
+        function isPlanetInFrontOfSun(planet) {
+            const planetPosition = new THREE.Vector3();
+            planet.object3D.getWorldPosition(planetPosition);
+
+            // Verifica se o planeta está em uma linha direta com o Sol (na frente do Sol no eixo Z)
+            // Vamos considerar que um planeta está "em frente" do Sol se o seu valor de 'z' for maior que o do Sol
+            return planetPosition.z > sunPosition.z;
+        }
+
+        // Função para abrir o modal VR
+        function openVRModal(title, content, planet) {
+            if (isPlanetInFrontOfSun(planet)) { // Verifica se o planeta está em frente ao Sol
+                const position = planet.object3D.getWorldPosition(new THREE.Vector3()); // Obtém a posição mundial do planeta
+
+                // Atualiza os textos do modal
+                vrModalTitle.setAttribute('value', title);
+                vrModalContent.setAttribute('value', content);
+
+                // Ajusta o modal para estar próximo do planeta
+                const modalPosition = {
+                    x: position.x + 1, // Deslocado para o lado (alterar para + ou - para ajustar)
+                    y: position.y + 1.5, // Deslocado para cima
+                    z: position.z // Mantém a mesma profundidade
+                };
+
+                // Define a posição e torna o modal visível
+                vrModal.setAttribute('position', `${modalPosition.x} ${modalPosition.y} ${modalPosition.z}`);
+                vrModal.setAttribute('visible', true);
+
+                // Adiciona animação ao modal
+                vrModal.setAttribute('animation', {
+                    property: 'position',
+                    to: `${modalPosition.x} ${modalPosition.y} ${modalPosition.z}`,
+                    easing: 'easeInOutCubic',
+                    dur: 500
+                });
+            }
+        }
+
+        // Fechar o modal VR
+        function closeVRModal() {
+            vrModal.setAttribute('visible', false);
+        }
+
+        // Evento para cada planeta
         planets.forEach(planet => {
-            planet.addEventListener('mouseenter', () => {
+            planet.addEventListener('click', () => {
                 const info = planet.getAttribute('data-info');
-                planet.timer = setTimeout(() => {
-                    infoText.setAttribute('text', `value: ${info}`);
-                }, 100);
-            });
-
-            planet.addEventListener('mouseleave', () => {
-                clearTimeout(planet.timer);
-                infoText.setAttribute('text', 'value: ');
+                const [title, ...details] = info.split('\n');
+                openVRModal(title, details.join('\n'), planet);
             });
         });
     </script>
+
+
+
 </body>
 
 </html>
