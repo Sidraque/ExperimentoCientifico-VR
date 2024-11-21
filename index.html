@@ -40,13 +40,13 @@
 
 
         <!-- Sun -->
-        <a-entity id="sun" geometry="primitive: sphere; radius:8;" position="0 1.25 -15"
+        <a-entity id="sun" geometry="primitive: sphere; radius:8;" position="0 1.25 -20"
             material="shader: flat; src: #sunText"
             animation="property: rotation; to: 0 -360 0; easing: linear; loop: true; dur: 200000">
         </a-entity>
 
         <!-- Mercury -->
-        <a-entity position="0 1.25 -5" rotation="0 20 0"
+        <a-entity position="0 1.25 -10" rotation="0 20 0"
             animation="property: rotation; to: 0 360 0; easing: linear; loop: true; dur: 18000">
             <a-entity id="mercury" geometry="primitive: sphere; radius:.2;" position="8 0 0"
                 material="src: #mercuryText" class="planet"
@@ -55,7 +55,7 @@
         </a-entity>
 
         <!-- Venus -->
-        <a-entity position="0 1.25 -5" rotation="0 -60 0"
+        <a-entity position="0 1.25 -15" rotation="0 -60 0"
             animation="property: rotation; to: 0 360 0; easing: linear; loop: true; dur: 24000">
             <a-entity id="venus" geometry="primitive: sphere; radius:.4;" position="10 0 0" material="src: #venusText"
                 class="planet"
@@ -64,7 +64,7 @@
         </a-entity>
 
         <!-- Earth -->
-        <a-entity position="0 1.25 -5" rotation="0 -60 0"
+        <a-entity position="0 1.25 -20" rotation="0 -60 0"
             animation="property: rotation; to: 0 300 0; easing: linear; loop: true; dur: 24000">
             <a-entity id="earth" geometry="primitive: sphere; radius:.6;" position="12 0 0"
                 material="src: #earthText; roughness: 0.8; metalness: 0.2" class="planet"
@@ -73,7 +73,7 @@
         </a-entity>
 
         <!-- Mars -->
-        <a-entity position="0 1.25 -5" rotation="0 -20 0"
+        <a-entity position="0 1.25 -25" rotation="0 -20 0"
             animation="property: rotation; to: 0 340 0; easing: linear; loop: true; dur: 27000">
             <a-entity id="mars" geometry="primitive: sphere; radius:.3;" position="14 0 0" material="src: #marsText"
                 class="planet"
@@ -82,7 +82,7 @@
         </a-entity>
 
         <!-- Jupiter -->
-        <a-entity position="0 1.25 -5" rotation="0 0 0"
+        <a-entity position="0 1.25 -30" rotation="0 0 0"
             animation="property: rotation; to: 0 360 0; easing: linear; loop: true; dur: 32000">
             <a-entity id="jupiter" geometry="primitive: sphere; radius:2;" position="18 0 0"
                 material="src: #jupiterText" class="planet"
@@ -91,7 +91,7 @@
         </a-entity>
 
         <!-- Saturn -->
-        <a-entity position="0 1.25 -5" rotation="0 40 0"
+        <a-entity position="0 1.25 -35" rotation="0 40 0"
             animation="property: rotation; to: 0 400 0; easing: linear; loop: true; dur: 35000">
             <a-entity id="saturn" geometry="primitive: sphere; radius:1.4;" position="22 0 0"
                 material="src: #saturnText" class="planet"
@@ -102,7 +102,7 @@
         </a-entity>
 
         <!-- Uranus -->
-        <a-entity position="0 1.25 -5" rotation="0 100 0"
+        <a-entity position="0 1.25 -40" rotation="0 100 0"
             animation="property: rotation; to: 0 400 0; easing: linear; loop: true; dur: 45000">
             <a-entity id="uranus" geometry="primitive: sphere; radius:1;" position="26 0 0" material="src: #uranusText"
                 class="planet"
@@ -111,7 +111,7 @@
         </a-entity>
 
         <!-- Neptune -->
-        <a-entity position="0 1.25 -5" rotation="0 120 0"
+        <a-entity position="0 1.25 -45" rotation="0 120 0"
             animation="property: rotation; to: 0 360 0; easing: linear; loop: true; dur: 60000">
             <a-entity id="neptune" geometry="primitive: sphere; radius:.8;" position="30 0 0"
                 material="src: #neptuneText" class="planet"
