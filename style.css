@@ -3,4 +3,6 @@ body {
     margin: 0;
     overflow: hidden;
     font-family: Arial, sans-serif;
+    height: 100vh; /* Ensure the body takes full height */
+    width: 100vw; /* Ensure the body takes full width */
 }
