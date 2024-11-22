@@ -22,7 +22,17 @@ function get_api_data(name){
 	}
 }
 
+function style_modal() {
+    datos.setAttribute('geometry', 'primitive: plane; height: 5; width: 5;');
+    datos.setAttribute('material', 'color: #fff; opacity: 0.9; side: double;');
+    planeta_text.setAttribute('color', '#000');
+    masa_text.setAttribute('color', '#000');
+    volumen_text.setAttribute('color', '#000');
+    gravedad_text.setAttribute('color', '#000');
+}
+
 function set_api_data(name, mass, volume, gravity){
+    style_modal();
 	if (information.status=="successful") {
 		planeta_text.setAttribute('value',name)
 		masa_text.setAttribute('value',"Massa: "+information.mass+" kg")
