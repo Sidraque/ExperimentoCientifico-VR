@@ -56,14 +56,14 @@ AFRAME.registerComponent('do-something', {
     mercurio.addEventListener('click', function (evt) {
     	var name = "Mercury"
     	get_api_data(name)
-    	setTimeout( () => {set_api_data("Mercúrio","3,302×10 23","6,083×10 10","3,7")}, 1000)
+    	setTimeout( () => {set_api_data("Mercurio","3,302×10 23","6,083×10 10","3,7")}, 1000)
 	    datos.object3D.visible = true
 	    setTimeout( () => {datos.object3D.visible = false}, 8000)
   	});
 
   	venus.addEventListener('click', function (evt) {
   		var name = "Venus"
-  		setTimeout( () => {set_api_data("Vênus","4,869×10 24","9,28x10 11","8,87")}, 1000)
+  		setTimeout( () => {set_api_data("Venus","4,869×10 24","9,28x10 11","8,87")}, 1000)
 	    datos.object3D.visible = true
 	    setTimeout( () => {datos.object3D.visible = false}, 8000)
   	});
@@ -87,7 +87,7 @@ AFRAME.registerComponent('do-something', {
 	jupiter.addEventListener('click', function (evt) {
 		var name = "Jupiter"
 		get_api_data(name)
-    	setTimeout( () => {set_api_data("Júpiter","1,899×10 27","1,4313×10 15","24.79")}, 1000)
+    	setTimeout( () => {set_api_data("Jupiter","1,899×10 27","1,4313×10 15","24.79")}, 1000)
 	    datos.object3D.visible = true
 	    setTimeout( () => {datos.object3D.visible = false}, 8000)
 	});

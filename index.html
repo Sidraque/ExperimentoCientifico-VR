@@ -6,7 +6,7 @@
   <body>
     <a-scene do-something particle-system="preset: dust; particleCount: 1000">
 
-      <a-entity position="0 2 0">
+      <a-entity position="0 3 0">
         <a-entity camera look-controls wasd-controls>
           <a-entity position="0 0 -3"
                     geometry="primitive: ring; radiusInner: 0.2; radiusOuter: 0.3;"
@@ -19,7 +19,7 @@
                 fill="forwards" from="0.1 0.1 0.1" to="1 1 1">
             </a-animation>
 
-            <a-entity id="datos" visible="false" position="0 3.5 -4" geometry="primitive: plane; height: 5; width: 5" material="side: double">
+            <a-entity id="datos" visible="false" position="0 3 -4" geometry="primitive: plane; height: 5; width: 5" material="side: double">
               <a-text font="monoid" id="planeta_text" position="-1 2 0" width="14" value="Carregando..." color="#000"></a-text>
               <a-text font="dejavu" id="masa_text" position="-2 1 0" width="7" value="Carregando..." color="#000"></a-text>
               <a-text font="dejavu" id="volumen_text" position="-2 0 0" width="7" value="Carregando..." color="#000"></a-text>
@@ -36,59 +36,60 @@
 
       <a-entity id="mercurio-orbit" position="0 2 -7">
         <a-sphere id="mercurio" position="2 0 0" radius="0.25" src="img/mercury.jpg">
-          <a-animation attribute="rotation" from="0 45 45" to="0 360 0" direction="alternate" dur="7500" repeat="indefinite"></a-animation>
+          <a-animation attribute="rotation" from="0 0 0" to="0 360 0" direction="normal" dur="7500" repeat="indefinite"></a-animation>
         </a-sphere>
         <a-animation attribute="rotation" to="0 360 0" dur="5500" repeat="indefinite" easing="linear"></a-animation>
       </a-entity>
 
       <a-entity id="venus-orbit" position="0 2 -7">
         <a-sphere id="venus" position="3 0 0" radius="0.375" src="img/venus_atmosphere.jpg">
-          <a-animation attribute="rotation" from="0 45 45" to="0 360 0" direction="alternate" dur="7500" repeat="indefinite"></a-animation>
+          <a-animation attribute="rotation" from="0 0 0" to="0 360 0" direction="normal" dur="7500" repeat="indefinite"></a-animation>
         </a-sphere>
         <a-animation attribute="rotation" to="0 360 0" dur="14575" repeat="indefinite" easing="linear"></a-animation>
       </a-entity>
 
       <a-entity id="tierra-orbit" position="0 2 -7">
         <a-sphere id="tierra" position="4 0 0" radius="0.5" src="img/earth.jpg">
-          <a-animation attribute="rotation" from="0 45 45" to="0 360 0" direction="alternate" dur="7500" repeat="indefinite"></a-animation>
+          <a-animation attribute="rotation" from="0 0 0" to="0 360 0" direction="normal" dur="7500" repeat="indefinite"></a-animation>
         </a-sphere>
         <a-animation attribute="rotation" to="0 360 0" dur="25000" repeat="indefinite" easing="linear"></a-animation>
       </a-entity>
 
       <a-entity id="marte-orbit" position="0 2 -7">
         <a-sphere id="marte" position="5 0 0" radius="0.25" src="img/mars.jpg">
-          <a-animation attribute="rotation" from="0 45 45" to="0 360 0" direction="alternate" dur="7500" repeat="indefinite"></a-animation>
+          <a-animation attribute="rotation" from="0 0 0" to="0 360 0" direction="normal" dur="7500" repeat="indefinite"></a-animation>
         </a-sphere>
         <a-animation attribute="rotation" to="0 360 0" dur="46750" repeat="indefinite" easing="linear"></a-animation>
       </a-entity>
 
       <a-entity id="jupiter-orbit" position="0 2 -7">
         <a-sphere id="jupiter" position="7 0 0" radius="0.75" src="img/jupiter.jpg">
-          <a-animation attribute="rotation" from="0 45 45" to="0 360 0" direction="alternate" dur="7500" repeat="indefinite"></a-animation>
+          <a-animation attribute="rotation" from="0 0 0" to="0 360 0" direction="normal" dur="7500" repeat="indefinite"></a-animation>
         </a-sphere>
         <a-animation attribute="rotation" to="0 360 0" dur="108325" repeat="indefinite" easing="linear"></a-animation>
       </a-entity>
 
       <a-entity id="saturno-orbit" position="0 2 -7">
         <a-sphere id="saturno" position="9 0 0" radius="0.625" src="img/saturn.jpg">
-          <a-animation attribute="rotation" from="0 45 45" to="0 360 0" direction="alternate" dur="7500" repeat="indefinite"></a-animation>
-          <!-- Adicionando o anel de Saturno com textura -->
-          <a-ring position="0 0 0" rotation="-90 0 0" radius-inner="0.7" radius-outer="1.2" material="src: img/saturn_ring_alpha.png; side: double;"></a-ring>
+          <a-animation attribute="rotation" from="0 0 0" to="0 360 0" direction="normal" dur="7500" repeat="indefinite"></a-animation>
         </a-sphere>
+        <!-- Adicionando o anel de Saturno -->
+        <a-ring position="9 0 0" radius-inner="0.8" radius-outer="1.5" rotation="-90 0 0" color="#b5b5b5" material="side:double; transparent:true; opacity:0.8;">
+        </a-ring>
         <a-animation attribute="rotation" to="0 360 0" dur="268975" repeat="indefinite" easing="linear"></a-animation>
-      </a-entity>      
+      </a-entity>
       
 
       <a-entity id="urano-orbit" position="0 2 -7">
         <a-sphere id="urano" position="11 0 0" radius="0.5" src="img/uranus.jpg">
-          <a-animation attribute="rotation" from="0 45 45" to="0 360 0" direction="alternate" dur="7500" repeat="indefinite"></a-animation>
+          <a-animation attribute="rotation" from="0 0 0" to="0 360 0" direction="normal" dur="7500" repeat="indefinite"></a-animation>
         </a-sphere>
         <a-animation attribute="rotation" to="0 360 0" dur="766500" repeat="indefinite" easing="linear"></a-animation>
       </a-entity>
 
       <a-entity id="neptuno-orbit" position="0 2 -7">
         <a-sphere id="neptuno" position="13 0 0" radius="0.5" src="img/neptune.jpg">
-          <a-animation attribute="rotation" from="0 45 45" to="0 360 0" direction="alternate" dur="7500" repeat="indefinite"></a-animation>
+          <a-animation attribute="rotation" from="0 0 0" to="0 360 0" direction="normal" dur="7500" repeat="indefinite"></a-animation>
         </a-sphere>
         <a-animation attribute="rotation" to="0 360 0" dur="1504750" repeat="indefinite" easing="linear"></a-animation>
       </a-entity>
