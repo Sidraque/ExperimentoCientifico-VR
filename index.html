@@ -6,7 +6,12 @@
   <body>
     <a-scene do-something particle-system="preset: dust; particleCount: 1000">
 
-      <a-entity position="0 3 0">
+      <!-- Adicionando iluminação -->
+      <a-light type="ambient" color="#888"></a-light>
+      <a-light type="directional" color="#fff" intensity="0.5" position="-1 1 0"></a-light>
+      <a-light type="directional" color="#fff" intensity="0.5" position="1 1 0"></a-light>
+
+      <a-entity position="0 2.5 0">
         <a-entity camera look-controls wasd-controls>
           <a-entity position="0 0 -3"
                     geometry="primitive: ring; radiusInner: 0.2; radiusOuter: 0.3;"
@@ -66,6 +71,19 @@
         <a-sphere id="jupiter" position="7 0 0" radius="0.75" src="img/jupiter.jpg">
           <a-animation attribute="rotation" from="0 0 0" to="0 360 0" direction="normal" dur="7500" repeat="indefinite"></a-animation>
         </a-sphere>
+        <!-- Adicionando luas de Júpiter -->
+        <a-sphere id="io" position="7.5 0 0" radius="0.1" color="#ffcc00">
+          <a-animation attribute="rotation" to="0 360 0" dur="2000" repeat="indefinite" easing="linear"></a-animation>
+        </a-sphere>
+        <a-sphere id="europa" position="8 0 0" radius="0.1" color="#cccccc">
+          <a-animation attribute="rotation" to="0 360 0" dur="3000" repeat="indefinite" easing="linear"></a-animation>
+        </a-sphere>
+        <a-sphere id="ganymede" position="8.5 0 0" radius="0.15" color="#999999">
+          <a-animation attribute="rotation" to="0 360 0" dur="4000" repeat="indefinite" easing="linear"></a-animation>
+        </a-sphere>
+        <a-sphere id="callisto" position="9 0 0" radius="0.12" color="#666666">
+          <a-animation attribute="rotation" to="0 360 0" dur="5000" repeat="indefinite" easing="linear"></a-animation>
+        </a-sphere>
         <a-animation attribute="rotation" to="0 360 0" dur="108325" repeat="indefinite" easing="linear"></a-animation>
       </a-entity>
 
@@ -76,14 +94,46 @@
         <!-- Adicionando o anel de Saturno -->
         <a-ring position="9 0 0" radius-inner="0.8" radius-outer="1.5" rotation="-90 0 0" color="#b5b5b5" material="side:double; transparent:true; opacity:0.8;">
         </a-ring>
+        <!-- Adicionando luas de Saturno -->
+        <a-sphere id="titan" position="10 0 0" radius="0.15" color="#ffcc66">
+          <a-animation attribute="rotation" to="0 360 0" dur="6000" repeat="indefinite" easing="linear"></a-animation>
+        </a-sphere>
+        <a-sphere id="rhea" position="10.5 0 0" radius="0.1" color="#cccccc">
+          <a-animation attribute="rotation" to="0 360 0" dur="7000" repeat="indefinite" easing="linear"></a-animation>
+        </a-sphere>
         <a-animation attribute="rotation" to="0 360 0" dur="268975" repeat="indefinite" easing="linear"></a-animation>
       </a-entity>
       
+      <!-- Adicionando cinturão de asteroides -->
+      <a-entity id="asteroid-belt" position="0 2 -7">
+        <a-sphere position="6 0 0" radius="0.05" src="img/asteroid.jpg">
+          <a-animation attribute="rotation" to="0 360 0" dur="10000" repeat="indefinite" easing="linear"></a-animation>
+        </a-sphere>
+        <a-sphere position="6.5 0 0" radius="0.05" src="img/asteroid.jpg">
+          <a-animation attribute="rotation" to="0 360 0" dur="12000" repeat="indefinite" easing="linear"></a-animation>
+        </a-sphere>
+        <a-sphere position="7 0 0" radius="0.05" src="img/asteroid.jpg">
+          <a-animation attribute="rotation" to="0 360 0" dur="14000" repeat="indefinite" easing="linear"></a-animation>
+        </a-sphere>
+        <a-sphere position="7.5 0 0" radius="0.05" src="img/asteroid.jpg">
+          <a-animation attribute="rotation" to="0 360 0" dur="16000" repeat="indefinite" easing="linear"></a-animation>
+        </a-sphere>
+      </a-entity>
+
+      <!-- Adicionando cometa -->
+      <a-entity id="comet" position="0 5 -10">
+        <a-sphere radius="0.2" src="img/cometa.jpg"></a-sphere>
+        <a-entity particle-system="preset: dust; particleCount: 200; color: #ffffff; size: 0.1; velocityValue: 0 0.5 0;"></a-entity>
+        <a-animation attribute="position" from="0 5 -10" to="10 -5 0" dur="20000" repeat="indefinite" easing="linear"></a-animation>
+      </a-entity>
 
       <a-entity id="urano-orbit" position="0 2 -7">
         <a-sphere id="urano" position="11 0 0" radius="0.5" src="img/uranus.jpg">
           <a-animation attribute="rotation" from="0 0 0" to="0 360 0" direction="normal" dur="7500" repeat="indefinite"></a-animation>
         </a-sphere>
+        <!-- Adicionando anéis de Urano -->
+        <a-ring position="11 0 0" radius-inner="0.6" radius-outer="0.8" rotation="-90 0 0" color="#a5a5a5" material="side:double; transparent:true; opacity:0.8;">
+        </a-ring>
         <a-animation attribute="rotation" to="0 360 0" dur="766500" repeat="indefinite" easing="linear"></a-animation>
       </a-entity>
 
@@ -91,6 +141,9 @@
         <a-sphere id="neptuno" position="13 0 0" radius="0.5" src="img/neptune.jpg">
           <a-animation attribute="rotation" from="0 0 0" to="0 360 0" direction="normal" dur="7500" repeat="indefinite"></a-animation>
         </a-sphere>
+        <!-- Adicionando anéis de Netuno -->
+        <a-ring position="13 0 0" radius-inner="0.6" radius-outer="0.8" rotation="-90 0 0" color="#6666ff" material="side:double; transparent:true; opacity:0.8;">
+        </a-ring>
         <a-animation attribute="rotation" to="0 360 0" dur="1504750" repeat="indefinite" easing="linear"></a-animation>
       </a-entity>
       
