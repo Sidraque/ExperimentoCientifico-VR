@@ -1,252 +1,100 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
+<html>
+  <head>
+    <script src="https://aframe.io/releases/0.8.2/aframe.min.js"></script>
+    <script src="js/aframe-particle-system-component.min.js"></script>
+  </head>
+  <body>
+    <a-scene do-something particle-system="preset: dust; particleCount: 1000">
 
-<head>
-    <title>System Solar - VR</title>
-    <meta name="viewport" content="width=device-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="style.css">
-    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
-</head>
+      <a-entity position="0 2 0">
+        <a-entity camera look-controls wasd-controls>
+          <a-entity position="0 0 -3"
+                    geometry="primitive: ring; radiusInner: 0.2; radiusOuter: 0.3;"
+                    material="color: red; shader: flat"
+                    cursor="fuse: true">
+            <a-animation begin="fusing" easing="ease-in" attribute="scale" 
+              fill="backwards" from="1 1 1" to="0.2 0.2 0.2" dur="1500">
+            </a-animation>
+            <a-animation begin="click" easing="ease-in" attribute="scale" dur="1500"
+                fill="forwards" from="0.1 0.1 0.1" to="1 1 1">
+            </a-animation>
 
-<body>
-    <a-scene>
-        <a-assets>
-            <audio id="background-music" src="audio/pad-space-travel-hyperdrive-engine-humming-235901.mp3"></audio>
-            <img id="sunText" src="img/sun.jpg">
-            <img id="earthText" src="img/earth.jpg">
-            <img id="marsText" src="img/mars.jpg">
-            <img id="venusText" src="img/venus_atmosphere.jpg">
-            <img id="mercuryText" src="img/mercury.jpg">
-            <img id="jupiterText" src="img/jupiter.jpg">
-            <img id="saturnText" src="img/saturn.jpg">
-            <img id="uranusText" src="img/uranus.jpg">
-            <img id="neptuneText" src="img/neptune.jpg">
-            <img id="saturnRingText" src="img/saturn_ring_alpha.png">
-            <img id="skyText" src="img/stars.jpg">
-        </a-assets>
-
-        <!-- Som de fundo tocando automaticamente -->
-        <a-sound id="sound" src="audio/pad-space-travel-hyperdrive-engine-humming-235901.mp3" position="0 0 0" autoplay="true" loop="true" volume="1"></a-sound>
-
-        <a-entity id="vr-modal" position="0 0 -3" visible="false">
-            <a-plane width="8" height="4" color="#000" material="opacity: 0.9" position="0 0 0"></a-plane>
-            <a-text id="vr-modal-title" value="" position="0 1.2 0" align="center" width="7" color="#FFD700"></a-text>
-            <a-text id="vr-modal-content" value="" position="0 -0.3 0" align="center" width="6.5" color="#FFF"></a-text>
-        </a-entity>
-
-        <a-sky src="#skyText"></a-sky>
-        <a-light type="ambient" color="#555"></a-light>
-
-        <!-- Sun -->
-        <a-entity id="sun" geometry="primitive: sphere; radius:8;" position="0 1.25 -35"
-            material="shader: flat; src: #sunText"
-            animation="property: rotation; to: 0 -360 0; easing: linear; loop: true; dur: 200000">
-        </a-entity>
-
-        <!-- Mercury -->
-        <a-entity position="0 1.25 -25" rotation="0 20 0"
-            animation="property: rotation; to: 0 360 0; easing: linear; loop: true; dur: 18000">
-            <a-entity id="mercury" geometry="primitive: sphere; radius:.2;" position="10 0 0"
-                material="src: #mercuryText" class="planet"
-                data-info="MERC&Uacute;RIO:\nO MENOR PLANETA.\nDIST&Acirc;NCIA DO SOL: 57.9M KM\nPER&Iacute;ODO ORBITAL: 88 DIAS">
+            <a-entity id="datos" visible="false" position="0 3.5 -4" geometry="primitive: plane; height: 5; width: 5" material="side: double">
+              <a-text font="monoid" id="planeta_text" position="-1 2 0" width="14" value="Carregando..." color="#000"></a-text>
+              <a-text font="dejavu" id="masa_text" position="-2 1 0" width="7" value="Carregando..." color="#000"></a-text>
+              <a-text font="dejavu" id="volumen_text" position="-2 0 0" width="7" value="Carregando..." color="#000"></a-text>
+              <a-text font="dejavu" id="gravedad_text" position="-2 -1 0" width="7" value="Carregando..." color="#000"></a-text>
             </a-entity>
+        
+          </a-entity>
         </a-entity>
+    </a-entity>
 
-        <!-- Venus -->
-        <a-entity position="0 1.25 -30" rotation="0 -60 0"
-            animation="property: rotation; to: 0 360 0; easing: linear; loop: true; dur: 24000">
-            <a-entity id="venus" geometry="primitive: sphere; radius:.4;" position="12 0 0" material="src: #venusText"
-                class="planet"
-                data-info="V&Ecirc;NUS:\nO PLANETA MAIS QUENTE.\nDIST&Acirc;NCIA DO SOL: 108.2M KM\nPER&Iacute;ODO ORBITAL: 225 DIAS">
-            </a-entity>
-        </a-entity>
+      <a-sphere id="sol" position="0 2 -7" radius="1.75" src="img/sun.jpg">
+        <a-entity position="0 -1.5 -0.5" particle-system="color: #EF0000,#44CC00;size: 0.1;maxAge:10;particleCount:300;texture:https://cdn.glitch.com/c1051546-359f-4e34-b17d-bd2b8900be35%2Fthumbnails%2F2k_sun.jpg?1599075846071"></a-entity>
+      </a-sphere>
 
-        <!-- Earth -->
-        <a-entity position="0 1.25 -35" rotation="0 -60 0"
-            animation="property: rotation; to: 0 300 0; easing: linear; loop: true; dur: 24000">
-            <a-entity id="earth" geometry="primitive: sphere; radius:.6;" position="14 0 0"
-                material="src: #earthText; roughness: 0.8; metalness: 0.2" class="planet"
-                data-info="TERRA:\nO PLANETA AZUL.\nDIST&Acirc;NCIA DO SOL: 150M KM\nPER&Iacute;ODO ORBITAL: 365 DIAS">
-            </a-entity>
-        </a-entity>
+      <a-entity id="mercurio-orbit" position="0 2 -7">
+        <a-sphere id="mercurio" position="2 0 0" radius="0.25" src="img/mercury.jpg">
+          <a-animation attribute="rotation" from="0 45 45" to="0 360 0" direction="alternate" dur="7500" repeat="indefinite"></a-animation>
+        </a-sphere>
+        <a-animation attribute="rotation" to="0 360 0" dur="5500" repeat="indefinite" easing="linear"></a-animation>
+      </a-entity>
 
-        <!-- Mars -->
-        <a-entity position="0 1.25 -40" rotation="0 -20 0"
-            animation="property: rotation; to: 0 340 0; easing: linear; loop: true; dur: 27000">
-            <a-entity id="mars" geometry="primitive: sphere; radius:.3;" position="16 0 0" material="src: #marsText"
-                class="planet"
-                data-info="MARTE:\nO PLANETA VERMELHO.\nDIST&Acirc;NCIA DO SOL: 228M KM\nPER&Iacute;ODO ORBITAL: 687 DIAS">
-            </a-entity>
-        </a-entity>
+      <a-entity id="venus-orbit" position="0 2 -7">
+        <a-sphere id="venus" position="3 0 0" radius="0.375" src="img/venus_atmosphere.jpg">
+          <a-animation attribute="rotation" from="0 45 45" to="0 360 0" direction="alternate" dur="7500" repeat="indefinite"></a-animation>
+        </a-sphere>
+        <a-animation attribute="rotation" to="0 360 0" dur="14575" repeat="indefinite" easing="linear"></a-animation>
+      </a-entity>
 
-        <!-- Jupiter -->
-        <a-entity position="0 1.25 -45" rotation="0 0 0"
-            animation="property: rotation; to: 0 360 0; easing: linear; loop: true; dur: 32000">
-            <a-entity id="jupiter" geometry="primitive: sphere; radius:2;" position="20 0 0"
-                material="src: #jupiterText" class="planet"
-                data-info="J&Uacute;PITER:\nO MAIOR PLANETA.\nDIST&Acirc;NCIA DO SOL: 778M KM\nPER&Iacute;ODO ORBITAL: 12 ANOS">
-            </a-entity>
-        </a-entity>
+      <a-entity id="tierra-orbit" position="0 2 -7">
+        <a-sphere id="tierra" position="4 0 0" radius="0.5" src="img/earth.jpg">
+          <a-animation attribute="rotation" from="0 45 45" to="0 360 0" direction="alternate" dur="7500" repeat="indefinite"></a-animation>
+        </a-sphere>
+        <a-animation attribute="rotation" to="0 360 0" dur="25000" repeat="indefinite" easing="linear"></a-animation>
+      </a-entity>
 
-        <!-- Saturn -->
-        <a-entity position="0 1.25 -50" rotation="0 40 0"
-            animation="property: rotation; to: 0 400 0; easing: linear; loop: true; dur: 35000">
-            <a-entity id="saturn" geometry="primitive: sphere; radius:1.4;" position="24 0 0"
-                material="src: #saturnText" class="planet"
-                data-info="SATURNO:\nCONHECIDO POR SEUS AN&Eacute;IS.\nDIST&Acirc;NCIA DO SOL: 1.43B KM\nPER&Iacute;ODO ORBITAL: 29 ANOS">
-                <a-ring position="0 0 0" rotation="-90 0 0" radius-inner="1.6" radius-outer="2.4"
-                    material="src: #saturnRingText"></a-ring>
-            </a-entity>
-        </a-entity>
+      <a-entity id="marte-orbit" position="0 2 -7">
+        <a-sphere id="marte" position="5 0 0" radius="0.25" src="img/mars.jpg">
+          <a-animation attribute="rotation" from="0 45 45" to="0 360 0" direction="alternate" dur="7500" repeat="indefinite"></a-animation>
+        </a-sphere>
+        <a-animation attribute="rotation" to="0 360 0" dur="46750" repeat="indefinite" easing="linear"></a-animation>
+      </a-entity>
 
-        <!-- Uranus -->
-        <a-entity position="0 1.25 -55" rotation="0 100 0"
-            animation="property: rotation; to: 0 400 0; easing: linear; loop: true; dur: 45000">
-            <a-entity id="uranus" geometry="primitive: sphere; radius:1;" position="28 0 0" material="src: #uranusText"
-                class="planet"
-                data-info="URANO:\nUM GIGANTE DE GELO.\nDIST&Acirc;NCIA DO SOL: 2.87B KM\nPER&Iacute;ODO ORBITAL: 84 ANOS">
-            </a-entity>
-        </a-entity>
+      <a-entity id="jupiter-orbit" position="0 2 -7">
+        <a-sphere id="jupiter" position="7 0 0" radius="0.75" src="img/jupiter.jpg">
+          <a-animation attribute="rotation" from="0 45 45" to="0 360 0" direction="alternate" dur="7500" repeat="indefinite"></a-animation>
+        </a-sphere>
+        <a-animation attribute="rotation" to="0 360 0" dur="108325" repeat="indefinite" easing="linear"></a-animation>
+      </a-entity>
 
-        <!-- Neptune -->
-        <a-entity position="0 1.25 -60" rotation="0 120 0"
-            animation="property: rotation; to: 0 360 0; easing: linear; loop: true; dur: 60000">
-            <a-entity id="neptune" geometry="primitive: sphere; radius:.8;" position="32 0 0"
-                material="src: #neptuneText" class="planet"
-                data-info="NETUNO:\nO PLANETA MAIS VENTOSO.\nDIST&Acirc;NCIA DO SOL: 4.5B KM\nPER&Iacute;ODO ORBITAL: 165 ANOS">
-            </a-entity>
-        </a-entity>
+      <a-entity id="saturno-orbit" position="0 2 -7">
+        <a-sphere id="saturno" position="9 0 0" radius="0.625" src="img/saturn.jpg">
+          <a-animation attribute="rotation" from="0 45 45" to="0 360 0" direction="alternate" dur="7500" repeat="indefinite"></a-animation>
+          <!-- Adicionando o anel de Saturno com textura -->
+          <a-ring position="0 0 0" rotation="-90 0 0" radius-inner="0.7" radius-outer="1.2" material="src: img/saturn_ring_alpha.png; side: double;"></a-ring>
+        </a-sphere>
+        <a-animation attribute="rotation" to="0 360 0" dur="268975" repeat="indefinite" easing="linear"></a-animation>
+      </a-entity>      
+      
 
-        <!-- Text para informações dos planetas -->
-        <a-entity id="info" position="0 3 -2" text="value: ; color: white; width: 25;"></a-entity>
+      <a-entity id="urano-orbit" position="0 2 -7">
+        <a-sphere id="urano" position="11 0 0" radius="0.5" src="img/uranus.jpg">
+          <a-animation attribute="rotation" from="0 45 45" to="0 360 0" direction="alternate" dur="7500" repeat="indefinite"></a-animation>
+        </a-sphere>
+        <a-animation attribute="rotation" to="0 360 0" dur="766500" repeat="indefinite" easing="linear"></a-animation>
+      </a-entity>
 
-        <!-- Câmera e cursor -->
-        <a-camera id="camera" position="0 1.6 15" wasd-controls-enabled="true" look-controls="true">
-            <a-cursor fuse="true" fuse-timeout="1000" raycaster="objects: .planet"
-                material="color: yellow; shader: flat;">
-            </a-cursor>
-        </a-camera>
+      <a-entity id="neptuno-orbit" position="0 2 -7">
+        <a-sphere id="neptuno" position="13 0 0" radius="0.5" src="img/neptune.jpg">
+          <a-animation attribute="rotation" from="0 45 45" to="0 360 0" direction="alternate" dur="7500" repeat="indefinite"></a-animation>
+        </a-sphere>
+        <a-animation attribute="rotation" to="0 360 0" dur="1504750" repeat="indefinite" easing="linear"></a-animation>
+      </a-entity>
+      
+      <a-sky src="img/stars.jpg"></a-sky>
     </a-scene>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const scene = document.querySelector('a-scene');
-            const camera = document.getElementById('camera');
-            const planets = document.querySelectorAll('.planet');
-            const vrModal = document.getElementById('vr-modal');
-            const vrModalTitle = document.getElementById('vr-modal-title');
-            const vrModalContent = document.getElementById('vr-modal-content');
-            const infoText = document.getElementById('info');
-            let infoTimeout;
-    
-            // Função para detectar dispositivos móveis
-            function isMobile() {
-                return /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-            }
-    
-            // Configuração inicial baseada no dispositivo
-            function setInitialCameraSettings() {
-                if (isMobile()) {
-                    camera.setAttribute('position', { x: 0, y: 1.6, z: 25 }); // Configuração para dispositivos móveis
-                    camera.setAttribute('zoom', 0.8); // Ajuste do zoom para mobile
-                } else {
-                    camera.setAttribute('position', { x: 0, y: 1.6, z: 15 }); // Configuração para desktops
-                    camera.setAttribute('zoom', 1); // Zoom padrão
-                }
-            }
-    
-            // Ajustar zoom para VR
-            function adjustZoomForVR(isVR) {
-                if (isVR) {
-                    camera.setAttribute('zoom', isMobile() ? 0.6 : 0.5); // Ajuste do zoom no modo VR para mobile ou desktop
-                } else {
-                    camera.setAttribute('zoom', isMobile() ? 0.8 : 1); // Zoom padrão
-                }
-            }
-    
-            // Ajustar posição da câmera para VR
-            function adjustCameraPositionForVR(isVR) {
-                if (isVR) {
-                    // Aumentar a distância no eixo Z para mobile
-                    camera.setAttribute('position', isMobile() ? { x: 0, y: 1.6, z: 45 } : { x: 0, y: 1.6, z: 20 }); 
-                } else {
-                    // Configuração padrão fora do modo VR
-                    camera.setAttribute('position', isMobile() ? { x: 0, y: 1.6, z: 25 } : { x: 0, y: 1.6, z: 15 });
-                }
-            }
-    
-            // Posição do Sol no espaço
-            const sunPosition = new THREE.Vector3(0, 1.25, -15);
-    
-            // Função para verificar se o planeta está à frente do Sol
-            function isPlanetInFrontOfSun(planet) {
-                const planetPosition = new THREE.Vector3();
-                planet.object3D.getWorldPosition(planetPosition);
-                return planetPosition.z > sunPosition.z;
-            }
-    
-            // Abrir modal VR
-            function openVRModal(title, content, planet) {
-                if (isPlanetInFrontOfSun(planet)) {
-                    const position = planet.object3D.getWorldPosition(new THREE.Vector3());
-    
-                    vrModalTitle.setAttribute('value', title);
-                    vrModalContent.setAttribute('value', content);
-    
-                    const modalPosition = {
-                        x: position.x + 1,
-                        y: position.y + 1.5,
-                        z: position.z
-                    };
-    
-                    vrModal.setAttribute('position', `${modalPosition.x} ${modalPosition.y} ${modalPosition.z}`);
-                    vrModal.setAttribute('visible', true);
-    
-                    vrModal.setAttribute('animation', {
-                        property: 'position',
-                        to: `${modalPosition.x} ${modalPosition.y} ${modalPosition.z}`,
-                        easing: 'easeInOutCubic',
-                        dur: 500
-                    });
-                }
-            }
-    
-            // Fechar modal VR
-            function closeVRModal() {
-                vrModal.setAttribute('visible', false);
-            }
-    
-            // Evento para exibir informações de cada planeta
-            planets.forEach(planet => {
-                planet.addEventListener('click', () => {
-                    const info = planet.getAttribute('data-info');
-                    const [title, ...details] = info.split('\n');
-                    openVRModal(title, details.join('\n'), planet);
-                });
-            });
-
-            // Evento para exibir informações de cada planeta ao passar o cursor
-            planets.forEach(planet => {
-                planet.addEventListener('mouseenter', () => {
-                    const info = planet.getAttribute('data-info');
-                    infoText.setAttribute('text', 'value', info);
-
-                    clearTimeout(infoTimeout); // Clear any existing timeout
-                });
-
-                planet.addEventListener('mouseleave', () => {
-                    infoTimeout = setTimeout(() => {
-                        infoText.setAttribute('text', 'value', '');
-                    }, 5000); // Hide info after 5 seconds
-                });
-            });
-    
-            // Inicializar configurações da câmera
-            setInitialCameraSettings();
-        });
-    </script>
-    
-</body>
-
+    <script type="text/javascript" src="js/app.js"></script>
+  </body>
 </html>
